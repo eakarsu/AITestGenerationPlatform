@@ -5,8 +5,29 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import FeaturePage from './pages/FeaturePage';
+import FlakyDetect from './pages/FlakyDetect';
+import DeadCode from './pages/DeadCode';
+import PerformanceRegression from './pages/PerformanceRegression';
+import CIIntegrations from './pages/CIIntegrations';
+import CoverageVisualization from './pages/CoverageVisualization';
 import Sidebar from './components/Sidebar';
 import './styles/App.css';
+// === Batch 08 Gaps & Frontend Mounts ===
+import CfAiTestGeneratorAnalyzingCodeAndProducing from './pages/CfAiTestGeneratorAnalyzingCodeAndProducing'
+import CfMutationTestingWithGeneratedMutantVariantsTo from './pages/CfMutationTestingWithGeneratedMutantVariantsTo'
+import CfFlakyTestDetectorIdentifyingNonDeterministicFailures from './pages/CfFlakyTestDetectorIdentifyingNonDeterministicFailures'
+import CfDeadCodeDetectorFlaggingUntestedCodePaths from './pages/CfDeadCodeDetectorFlaggingUntestedCodePaths'
+import CfPerformanceRegressionDetectionIdentifyingTestExecutionDegradation from './pages/CfPerformanceRegressionDetectionIdentifyingTestExecutionDegradation'
+import CfVcsWebhookIntegrationAutoRunningSuitesOn from './pages/CfVcsWebhookIntegrationAutoRunningSuitesOn'
+import GapCriticalGapNoAiDrivenTestGeneration from './pages/GapCriticalGapNoAiDrivenTestGeneration'
+import GapNoMutationTestingAiAnalysis from './pages/GapNoMutationTestingAiAnalysis'
+import GapNoFlakyTestDetectionMlModel from './pages/GapNoFlakyTestDetectionMlModel'
+import GapNoCodeCoverageGapRecommender from './pages/GapNoCodeCoverageGapRecommender'
+import GapLimitedVcsIntegrationGitAutoTriggerNot from './pages/GapLimitedVcsIntegrationGitAutoTriggerNot'
+import GapLimitedCiCdPlatformIntegrationBeyondStub from './pages/GapLimitedCiCdPlatformIntegrationBeyondStub'
+import GapNoCodeCoverageVisualizationUiRoute from './pages/GapNoCodeCoverageVisualizationUiRoute'
+import GapNoTestFlakinessDetectionFeature from './pages/GapNoTestFlakinessDetectionFeature'
+import GapNotificationsLimitedToOneReferenceNotA from './pages/GapNotificationsLimitedToOneReferenceNotA'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -53,6 +74,11 @@ function App() {
     { key: 'integration-testing', label: 'Integration Testing', icon: 'FaPuzzlePiece', ai: true },
     { key: 'regression-testing', label: 'Regression Testing', icon: 'FaHistory', ai: true },
     { key: 'reports', label: 'Reports & Analytics', icon: 'FaChartBar' },
+    { key: 'flaky-detect', label: 'Flaky Test Detector', icon: 'FaRandom', ai: true, customRoute: true },
+    { key: 'dead-code', label: 'Dead Code Detector', icon: 'FaCode', ai: true, customRoute: true },
+    { key: 'performance-regression', label: 'Performance Regression', icon: 'FaTachometerAlt', ai: true, customRoute: true },
+    { key: 'ci-integrations', label: 'CI / Webhook Integrations', icon: 'FaPlug', ai: true, customRoute: true },
+    { key: 'coverage-visualization', label: 'Coverage Visualization', icon: 'FaChartBar', customRoute: true },
   ];
 
   return (
@@ -68,10 +94,31 @@ function App() {
         <main className={`main-content ${sidebarOpen ? '' : 'expanded'}`}>
           <Routes>
             <Route path="/" element={<Dashboard features={features} />} />
-            {features.map(f => (
+            {features.filter(f => !f.customRoute).map(f => (
               <Route key={f.key} path={`/${f.key}`} element={<FeaturePage feature={f} />} />
             ))}
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/flaky-detect" element={<FlakyDetect />} />
+            <Route path="/dead-code" element={<DeadCode />} />
+            <Route path="/performance-regression" element={<PerformanceRegression />} />
+            <Route path="/ci-integrations" element={<CIIntegrations />} />
+            <Route path="/coverage-visualization" element={<CoverageVisualization />} />
+            {/* // === Batch 08 Gaps & Frontend Mounts === */}
+      <Route path="/cf-ai-test-generator-analyzing-code-and-producing-assertions" element={<ProtectedRoute><CfAiTestGeneratorAnalyzingCodeAndProducing /></ProtectedRoute>} />
+      <Route path="/cf-mutation-testing-with-generated-mutant-variants-to-assess" element={<ProtectedRoute><CfMutationTestingWithGeneratedMutantVariantsTo /></ProtectedRoute>} />
+      <Route path="/cf-flaky-test-detector-identifying-non-deterministic-failures" element={<ProtectedRoute><CfFlakyTestDetectorIdentifyingNonDeterministicFailures /></ProtectedRoute>} />
+      <Route path="/cf-dead-code-detector-flagging-untested-code-paths" element={<ProtectedRoute><CfDeadCodeDetectorFlaggingUntestedCodePaths /></ProtectedRoute>} />
+      <Route path="/cf-performance-regression-detection-identifying-test-execution-degradation" element={<ProtectedRoute><CfPerformanceRegressionDetectionIdentifyingTestExecutionDegradation /></ProtectedRoute>} />
+      <Route path="/cf-vcs-webhook-integration-auto-running-suites-on-pr-open" element={<ProtectedRoute><CfVcsWebhookIntegrationAutoRunningSuitesOn /></ProtectedRoute>} />
+      <Route path="/gap-critical-gap-no-ai-driven-test-generation-despite-domain" element={<ProtectedRoute><GapCriticalGapNoAiDrivenTestGeneration /></ProtectedRoute>} />
+      <Route path="/gap-no-mutation-testing-ai-analysis" element={<ProtectedRoute><GapNoMutationTestingAiAnalysis /></ProtectedRoute>} />
+      <Route path="/gap-no-flaky-test-detection-ml-model" element={<ProtectedRoute><GapNoFlakyTestDetectionMlModel /></ProtectedRoute>} />
+      <Route path="/gap-no-code-coverage-gap-recommender" element={<ProtectedRoute><GapNoCodeCoverageGapRecommender /></ProtectedRoute>} />
+      <Route path="/gap-limited-vcs-integration-git-auto-trigger-not-visible" element={<ProtectedRoute><GapLimitedVcsIntegrationGitAutoTriggerNot /></ProtectedRoute>} />
+      <Route path="/gap-limited-ci-cd-platform-integration-beyond-stub-modules" element={<ProtectedRoute><GapLimitedCiCdPlatformIntegrationBeyondStub /></ProtectedRoute>} />
+      <Route path="/gap-no-code-coverage-visualization-ui-route" element={<ProtectedRoute><GapNoCodeCoverageVisualizationUiRoute /></ProtectedRoute>} />
+      <Route path="/gap-no-test-flakiness-detection-feature" element={<ProtectedRoute><GapNoTestFlakinessDetectionFeature /></ProtectedRoute>} />
+      <Route path="/gap-notifications-limited-to-one-reference-not-a-full" element={<ProtectedRoute><GapNotificationsLimitedToOneReferenceNotA /></ProtectedRoute>} />
+      <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
         <ToastContainer position="top-right" theme="dark" />
