@@ -78,6 +78,9 @@ app.use('/api/gap-no-code-coverage-visualization-ui-route', require('./routes/ga
 app.use('/api/gap-no-test-flakiness-detection-feature', require('./routes/gapNoTestFlakinessDetectionFeature'));
 app.use('/api/gap-notifications-limited-to-one-reference-not-a-full', require('./routes/gapNotificationsLimitedToOneReferenceNotAFull'));
 
+// Custom Views — mounted BEFORE 404 / app.listen.
+app.use('/api/custom-views', require('./routes/customViews'));
+
 app.listen(PORT, () => {
       console.log(`Backend server running on port ${PORT}`);
     });

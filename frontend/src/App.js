@@ -10,8 +10,15 @@ import DeadCode from './pages/DeadCode';
 import PerformanceRegression from './pages/PerformanceRegression';
 import CIIntegrations from './pages/CIIntegrations';
 import CoverageVisualization from './pages/CoverageVisualization';
+import CustomViewsPage from './pages/CustomViewsPage';
 import Sidebar from './components/Sidebar';
 import './styles/App.css';
+
+// Lightweight passthrough used by pre-existing Gap/Cf routes that reference
+// <ProtectedRoute> without importing one. Defining it here avoids a
+// ReferenceError if a user navigates to those routes; auth is already
+// enforced at the App level (login gate above).
+const ProtectedRoute = ({ children }) => children;
 // === Batch 08 Gaps & Frontend Mounts ===
 import CfAiTestGeneratorAnalyzingCodeAndProducing from './pages/CfAiTestGeneratorAnalyzingCodeAndProducing'
 import CfMutationTestingWithGeneratedMutantVariantsTo from './pages/CfMutationTestingWithGeneratedMutantVariantsTo'
@@ -79,6 +86,7 @@ function App() {
     { key: 'performance-regression', label: 'Performance Regression', icon: 'FaTachometerAlt', ai: true, customRoute: true },
     { key: 'ci-integrations', label: 'CI / Webhook Integrations', icon: 'FaPlug', ai: true, customRoute: true },
     { key: 'coverage-visualization', label: 'Coverage Visualization', icon: 'FaChartBar', customRoute: true },
+    { key: 'custom-views', label: 'Test Views', icon: 'FaChartBar', customRoute: true },
   ];
 
   return (
@@ -102,6 +110,7 @@ function App() {
             <Route path="/performance-regression" element={<PerformanceRegression />} />
             <Route path="/ci-integrations" element={<CIIntegrations />} />
             <Route path="/coverage-visualization" element={<CoverageVisualization />} />
+            <Route path="/custom-views" element={<CustomViewsPage />} />
             {/* // === Batch 08 Gaps & Frontend Mounts === */}
       <Route path="/cf-ai-test-generator-analyzing-code-and-producing-assertions" element={<ProtectedRoute><CfAiTestGeneratorAnalyzingCodeAndProducing /></ProtectedRoute>} />
       <Route path="/cf-mutation-testing-with-generated-mutant-variants-to-assess" element={<ProtectedRoute><CfMutationTestingWithGeneratedMutantVariantsTo /></ProtectedRoute>} />
