@@ -2,6 +2,7 @@ const express = require('express');
 const { IntegrationTest } = require('../models');
 const auth = require('../middleware/auth');
 const openrouter = require('../services/openrouter');
+const { aiRateLimiter, persistAiResult } = require('../middleware/aiMiddleware');
 const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
@@ -45,7 +46,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // AI Generate Integration Tests
-router.post('/:id/generate', auth, async (req, res) => {
+router.post('/:id/generate', auth, aiRateLimiter, async (req, res) => {
   try {
     const item = await IntegrationTest.findOne({ where: { id: req.params.id, userId: req.user.id } });
     if (!item) return res.status(404).json({ error: 'Not found' });

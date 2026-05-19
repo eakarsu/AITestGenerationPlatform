@@ -50,6 +50,21 @@ export const performanceAPI = { ...createCrudAPI('performance-testing'), generat
 export const securityAPI = { ...createCrudAPI('security-testing'), scan: (id) => api.post(`/security-testing/${id}/scan`) };
 export const integrationAPI = { ...createCrudAPI('integration-testing'), generate: (id) => api.post(`/integration-testing/${id}/generate`) };
 export const regressionAPI = { ...createCrudAPI('regression-testing'), generate: (id) => api.post(`/regression-testing/${id}/generate`) };
-export const reportsAPI = createCrudAPI('reports');
+export const reportsAPI = {
+  ...createCrudAPI('reports'),
+  generate: (id) => api.get(`/reports/${id}/generate`),
+  generateHtml: (id) => api.get(`/reports/${id}/generate-html`, { responseType: 'blob' }),
+};
+export const mutationAPI = {
+  score: (id) => api.post(`/test-cases/${id}/mutation-score`),
+};
+export const uploadCodeAPI = {
+  upload: (formData) => api.post('/test-cases/upload-code', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+};
+export const testExecutionsRunAPI = {
+  run: (id) => api.post(`/test-executions/${id}/run`),
+};
 
 export default api;
