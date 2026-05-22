@@ -12,19 +12,12 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// Local lightweight rate-limit; use ipKeyGenerator if available to comply
-// with express-rate-limit v8 IPv6 guidance.
-let keyGen;
-try {
-  const erl = require('express-rate-limit');
-  if (typeof erl.ipKeyGenerator === 'function') keyGen = erl.ipKeyGenerator;
-} catch (_) { /* noop */ }
+// Local lightweight rate-limit; default keyGenerator handles IPv6 safely.
 const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 120,
   standardHeaders: true,
   legacyHeaders: false,
-  ...(keyGen ? { keyGenerator: (req) => keyGen(req.ip) } : {}),
 });
 router.use(limiter);
 

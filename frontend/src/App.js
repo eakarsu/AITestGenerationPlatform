@@ -14,6 +14,9 @@ import CustomViewsPage from './pages/CustomViewsPage';
 import Sidebar from './components/Sidebar';
 import './styles/App.css';
 
+import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
+import CodexOperationsFeature from './pages/CodexOperationsFeature';
+
 // Lightweight passthrough used by pre-existing Gap/Cf routes that reference
 // <ProtectedRoute> without importing one. Defining it here avoids a
 // ReferenceError if a user navigates to those routes; auth is already
@@ -101,6 +104,9 @@ function App() {
         />
         <main className={`main-content ${sidebarOpen ? '' : 'expanded'}`}>
           <Routes>
+        <Route path="/codex/custom-viz" element={<ProtectedRoute><CodexCustomVizFeature /></ProtectedRoute>} />
+        <Route path="/codex/operations" element={<ProtectedRoute><CodexOperationsFeature /></ProtectedRoute>} />
+
             <Route path="/" element={<Dashboard features={features} />} />
             {features.filter(f => !f.customRoute).map(f => (
               <Route key={f.key} path={`/${f.key}`} element={<FeaturePage feature={f} />} />
