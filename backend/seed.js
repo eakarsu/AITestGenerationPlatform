@@ -3,6 +3,12 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const bcrypt = require('bcryptjs');
 const { sequelize, User, Project, TestCase, TestSuite, CodeAnalysis, BugDetection, CoverageAnalysis, TestTemplate, Team, TestExecution, ApiTest, PerformanceTest, SecurityTest, IntegrationTest, RegressionTest, Report } = require('./models');
 
+if (process.env.NODE_ENV === 'production' || process.env.ALLOW_DEMO_SEED !== 'true') {
+  throw new Error('Demo seeding requires ALLOW_DEMO_SEED=true outside production.');
+}
+const demoPassword = String(process.env.DEMO_PASSWORD || '');
+if (demoPassword.length < 12) throw new Error('DEMO_PASSWORD must contain at least 12 characters.');
+
 async function seed() {
   try {
     await sequelize.authenticate();
@@ -11,7 +17,7 @@ async function seed() {
     console.log('Tables created');
 
     // Create demo user
-    const hashedPassword = await bcrypt.hash('demo123', 10);
+    const hashedPassword = await bcrypt.hash(demoPassword, 12);
     const user = await User.create({
       email: 'demo@testgen.ai',
       password: hashedPassword,
@@ -306,7 +312,7 @@ async function seed() {
     ]);
 
     console.log('Seed completed successfully!');
-    console.log('Demo User: demo@testgen.ai / demo123');
+    console.log('Demo user created; password was supplied through DEMO_PASSWORD.');
     process.exit(0);
   } catch (err) {
     console.error('Seed failed:', err);
