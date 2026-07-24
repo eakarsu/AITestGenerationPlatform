@@ -7,10 +7,14 @@ const { sequelize } = require('../models');
 // Feature: ai-test-generator
 
 async function callOpenRouter(systemPrompt, userPrompt, opts = {}) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) throw new Error('OPENROUTER_API_KEY missing. TODO: configure credentials');
-  const model = process.env.OPENROUTER_MODEL || 'anthropic/claude-3-5-sonnet-20241022';
-  const base = process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1';
+  const apiKey = process.env.OPENROUTER_API_KEY || '';
+  const model = process.env.OPENROUTER_MODEL || '';
+  const base = (process.env.OPENROUTER_BASE_URL || '').replace(/\/$/, '');
+  if (!apiKey) throw new Error('OPENROUTER_API_KEY is required');
+  if (!model) throw new Error('OPENROUTER_MODEL is required');
+  if (base !== 'https://openrouter.ai/api/v1') {
+    throw new Error('OPENROUTER_BASE_URL must be https://openrouter.ai/api/v1');
+  }
   const httpResp = await fetch(`${base}/chat/completions`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
@@ -26,20 +30,26 @@ async function callOpenRouter(systemPrompt, userPrompt, opts = {}) {
   });
   if (!httpResp.ok) throw new Error(`OpenRouter HTTP ${httpResp.status}`);
   const data = await httpResp.json();
-  let txt = data.choices[0].message.content.trim();
+  if (data.error) throw new Error(data.error.message || 'OpenRouter API error');
+  let txt = data.choices?.[0]?.message?.content?.trim() || '';
+  if (!txt) throw new Error('OpenRouter returned an empty response');
   txt = txt.replace(/^```(?:json|JSON)?\s*\n?/, '').replace(/\n?\s*```\s*$/, '');
   try { return JSON.parse(txt); } catch { return { raw: txt }; }
 }
 
 async function persist(userId, feature, input, output) {
-  try {
-    if (typeof pool !== 'undefined' && pool && pool.query) {
-      await pool.query(
-        `INSERT INTO ai_results (user_id, feature, input, output) VALUES ($1,$2,$3,$4)`,
-        [userId, feature, JSON.stringify(input).slice(0, 4000), JSON.stringify(output)]
-      ).catch(() => {});
+  await sequelize.query(
+    `INSERT INTO ai_results (user_id, endpoint, input_data, result)
+     VALUES (:userId, :endpoint, CAST(:inputData AS jsonb), CAST(:result AS jsonb))`,
+    {
+      replacements: {
+        userId: userId || null,
+        endpoint: feature,
+        inputData: JSON.stringify(input),
+        result: JSON.stringify(output),
+      },
     }
-  } catch (_) {}
+  );
 }
 
 // POST /analyze - main feature endpoint

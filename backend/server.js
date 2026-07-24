@@ -19,7 +19,7 @@ const providerPrefixes = [
   '/api/test-cases', '/api/code-analysis', '/api/bug-detection',
   '/api/coverage-analysis', '/api/api-testing', '/api/performance-testing',
   '/api/security-testing', '/api/integration-testing', '/api/regression-testing',
-  '/api/ai-test-generator', '/api/mutation-testing', '/api/flaky-test-detector',
+  '/api/mutation-testing', '/api/flaky-test-detector',
   '/api/dead-code-detector', '/api/perf-regression-detection',
   '/api/vcs-webhook-integration', '/api/gap-',
 ];
@@ -51,6 +51,8 @@ const protectedRoutes = [
   ['/api/custom-views', './routes/customViews'],
 ];
 for (const [routePath, modulePath] of protectedRoutes) app.use(routePath, require(modulePath));
+// The test generator is a core authenticated application capability.
+app.use('/api/ai-test-generator', require('./routes/aiTestGenerator'));
 
 if (process.env.ENABLE_LEGACY_PROVIDER_ROUTES === 'true') {
   const legacyRoutes = [
@@ -63,7 +65,6 @@ if (process.env.ENABLE_LEGACY_PROVIDER_ROUTES === 'true') {
     ['/api/security-testing', './routes/securityTesting'],
     ['/api/integration-testing', './routes/integrationTesting'],
     ['/api/regression-testing', './routes/regressionTesting'],
-    ['/api/ai-test-generator', './routes/aiTestGenerator'],
     ['/api/mutation-testing', './routes/mutationTesting'],
     ['/api/flaky-test-detector', './routes/flakyTestDetector'],
     ['/api/dead-code-detector', './routes/deadCodeDetector'],
