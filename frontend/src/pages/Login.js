@@ -10,7 +10,7 @@ function Login({ onLogin }) {
   const [loading, setLoading] = useState(false);
 
   const fillDemo = () => {
-    setForm({ email: 'demo@testgen.ai', password: 'demo123', name: 'Alex Johnson' });
+    setForm({ email: process.env.REACT_APP_DEMO_EMAIL || '', password: process.env.REACT_APP_DEMO_PASSWORD || '', name: 'Alex Johnson' });
   };
 
   const handleSubmit = async (e) => {
