@@ -146,7 +146,7 @@ function Login({ onLogin }) {
             </form>
 
             <button className="demo-btn" onClick={fillDemo}>
-              Quick Demo Login (Click to fill credentials)
+              Auto Fill Demo Credentials
             </button>
 
             <div className="login-toggle">

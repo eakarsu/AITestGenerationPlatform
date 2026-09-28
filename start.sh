@@ -73,7 +73,13 @@ done
 
 (cd "$project_dir/backend" && BACKEND_PORT="${BACKEND_PORT:-3001}" npm start) &
 backend_pid=$!
-(cd "$project_dir/frontend" && PORT="${FRONTEND_PORT:-3000}" BROWSER=none npm start) &
+frontend_api_url="${REACT_APP_API_URL:-http://127.0.0.1:${BACKEND_PORT:-3001}}"
+frontend_api_url="${frontend_api_url%/}"
+case "$frontend_api_url" in
+  */api) ;;
+  *) frontend_api_url="$frontend_api_url/api" ;;
+esac
+(cd "$project_dir/frontend" && REACT_APP_API_URL="$frontend_api_url" PORT="${FRONTEND_PORT:-3000}" BROWSER=none npm start) &
 frontend_pid=$!
 
 cleanup() {
